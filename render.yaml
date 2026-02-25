@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: tcees-validator
+    runtime: python
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: gunicorn tcees_service:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: TCEES_URL
+        value: https://conformidadepdf.tcees.tc.br
+      - key: TCEES_WAIT_SEC
+        value: "30"
+      - key: TCEES_MAX_FILE_MB
+        value: "20"
+      - key: TCEES_API_SECRET
+        generateValue: true   # Render gera uma chave aleatória – copie ela depois!
+    # Buildpack com Chrome headless
+    dockerfilePath: Dockerfile
